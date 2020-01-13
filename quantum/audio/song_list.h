@@ -143,7 +143,11 @@
 #define CLOSE_ENCOUNTERS_5_NOTE
 #define DOE_A_DEER
 #define IN_LIKE_FLINT
-#define IMPERIAL_MARCH
+#define IMPERIAL_MARCH\
+  W__NOTE(_G4), W__NOTE(_G4), W__NOTE(_G4), WD_NOTE(_EF4), H__NOTE(_BF4), \
+  W__NOTE(_G4), WD_NOTE(_EF4),  H__NOTE(_BF4), B__NOTE(_G4), \
+  W__NOTE(_D5), W__NOTE(_D5), W__NOTE(_D5), WD_NOTE(_EF5), H__NOTE(_BF5), \
+  W__NOTE(_FS4), WD_NOTE(_EF4),  H__NOTE(_BF5), B__NOTE(_G4)
 #define BASKET_CASE
 #define COIN_SOUND
 #define ONE_UP_SOUND
