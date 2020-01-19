@@ -16,7 +16,7 @@
 
 #include QMK_KEYBOARD_H
 #include "muse.h"
-
+// RAISE and ADJUST are spare layer
 enum preonic_layers {
   _QWERTY,
   _LOWER,
