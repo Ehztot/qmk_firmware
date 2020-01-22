@@ -24,8 +24,8 @@ enum preonic_layers {
   _ADJUST
 };
 
-bool is_alt_tab_active = false;    # ADD this near the begining of keymap.c
-uint16_t alt_tab_timer = 0;        # we will be using them soon.
+bool is_alt_tab_active = false;   // # ADD this near the begining of keymap.c
+uint16_t alt_tab_timer = 0;       // # we will be using them soon.
 
 enum preonic_keycodes {
   QWERTY = SAFE_RANGE,
@@ -232,12 +232,12 @@ bool music_mask_user(uint16_t keycode) {
   }
 }
 
-enum custom_keycodes {             # Make sure have the awesome keycode ready
+enum custom_keycodes {             //# Make sure have the awesome keycode ready
   ALT_TAB = SAFE_RANGE,
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {               # This will do most of the grunt work with the keycodes.
+  switch (keycode) {               //# This will do most of the grunt work with the keycodes.
     case ALT_TAB:
       if (record->event.pressed) {
         if (!is_alt_tab_active) {
@@ -254,7 +254,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
-void matrix_scan_user(void) {     # The very important timer.
+void matrix_scan_user(void) {     //# The very important timer.
   if (is_alt_tab_active) {
     if (timer_elapsed(alt_tab_timer) > 1000) {
       unregister_code(KC_LALT);
