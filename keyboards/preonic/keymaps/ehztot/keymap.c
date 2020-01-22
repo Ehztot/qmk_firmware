@@ -24,6 +24,9 @@ enum preonic_layers {
   _ADJUST
 };
 
+bool is_alt_tab_active = false;    # ADD this near the begining of keymap.c
+uint16_t alt_tab_timer = 0;        # we will be using them soon.
+
 enum preonic_keycodes {
   QWERTY = SAFE_RANGE,
   LOWER,
@@ -61,7 +64,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |      | bd   |      |      |      |             |      | Next | Vol- | Vol+ | Play |
  * `-----------------------------------------------------------------------------------'
  */
-[_LOWER] = LAYOUT_preonic_2x2u(KC_ESC, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_EQL, KC_PSCR, KC_TAB, KC_F11, KC_F12, KC_NO, KC_NO, KC_NO, KC_P7, KC_P8, KC_P9, KC_LBRC, KC_RBRC, KC_BSLS, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_P4, KC_P5, KC_P6, KC_INS, KC_HOME, KC_PGUP, KC_LSFT, KC_BRIU, KC_NO, KC_NO, KC_NO, KC_NO, KC_P1, KC_P2, KC_P3, KC_DEL, KC_END, KC_PGDN, KC_LGUI, KC_BRID, KC_NO, KC_TRNS, KC_MPLY, TO(1), KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT),
+[_LOWER] = LAYOUT_preonic_2x2u(KC_ESC, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_EQL, KC_PSCR, KC_TAB, KC_F11, KC_F12, KC_NO, KC_NO, KC_NO, KC_P7, KC_P8, KC_P9, KC_LBRC, KC_RBRC, KC_BSLS, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_P4, KC_P5, KC_P6, KC_INS, KC_HOME, KC_PGUP, KC_LSFT, KC_BRIU, KC_NO, KC_NO, KC_NO, KC_NO, KC_P1, KC_P2, KC_P3, KC_DEL, KC_END, KC_PGDN, ALT_TAB, KC_BRID, KC_NO, KC_TRNS, KC_MPLY, TO(1), KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT),
 
 /* Raise
  * ,-----------------------------------------------------------------------------------.
@@ -226,5 +229,36 @@ bool music_mask_user(uint16_t keycode) {
       return false;
     default:
       return true;
+  }
+}
+
+enum custom_keycodes {             # Make sure have the awesome keycode ready
+  ALT_TAB = SAFE_RANGE,
+};
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {               # This will do most of the grunt work with the keycodes.
+    case ALT_TAB:
+      if (record->event.pressed) {
+        if (!is_alt_tab_active) {
+          is_alt_tab_active = true;
+          register_code(KC_LALT);
+        }
+        alt_tab_timer = timer_read();
+        register_code(KC_TAB);
+      } else {
+        unregister_code(KC_TAB);
+      }
+      break;
+  }
+  return true;
+}
+
+void matrix_scan_user(void) {     # The very important timer.
+  if (is_alt_tab_active) {
+    if (timer_elapsed(alt_tab_timer) > 1000) {
+      unregister_code(KC_LALT);
+      is_alt_tab_active = false;
+    }
   }
 }
