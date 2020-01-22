@@ -165,7 +165,7 @@ uint16_t muse_tempo = 50;
 
 void encoder_update_user(uint8_t index, bool clockwise) {
   if (muse_mode) {
-    if (IS_LAYER_ON(_RAISE)) {
+    if (IS_LAYER_ON(_LOWER)) {
       if (clockwise) {
         muse_offset++;
       } else {
