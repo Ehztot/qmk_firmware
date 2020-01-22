@@ -164,26 +164,18 @@ uint8_t muse_offset = 70;
 uint16_t muse_tempo = 50;
 
 void encoder_update_user(uint8_t index, bool clockwise) {
-  if (muse_mode) {
     if (IS_LAYER_ON(_RAISE)) {
-      if (clockwise) {
-        muse_offset++;
-      } else {
-        muse_offset--;
-      }
-    } else {
-      if (clockwise) {
-        muse_tempo+=1;
-      } else {
-        muse_tempo-=1;
-      }
-    }
-  } else {
-    if (clockwise) {
-      tap_code(KC_MS_WH_UP);
-    } else {
-      tap_code(KC_MS_WH_DOWN);
-    }
+        if (clockwise) {
+            tap_code(KC_RIGHT);
+        }else {
+            tap_code(KC_LEFT);
+                }
+    }else {
+        if (clockwise) {
+            tap_code(KC_MS_WH_UP);
+        } else {
+            tap_code(KC_MS_WH_DOWN);
+                }
   }
 }
 
