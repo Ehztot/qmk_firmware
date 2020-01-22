@@ -27,6 +27,36 @@ enum preonic_layers {
 bool is_alt_tab_active = false;   // # ADD this near the begining of keymap.c
 uint16_t alt_tab_timer = 0;       // # we will be using them soon.
 
+enum custom_keycodes {             //# Make sure have the awesome keycode ready
+  ALT_TAB = SAFE_RANGE,
+};
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {               //# This will do most of the grunt work with the keycodes.
+    case ALT_TAB:
+      if (record->event.pressed) {
+        if (!is_alt_tab_active) {
+          is_alt_tab_active = true;
+          register_code(KC_LALT);
+        }
+        alt_tab_timer = timer_read();
+        register_code(KC_TAB);
+      } else {
+        unregister_code(KC_TAB);
+      }
+      break;
+  }
+  return true;
+}
+
+void matrix_scan_user(void) {     //# The very important timer.
+  if (is_alt_tab_active) {
+    if (timer_elapsed(alt_tab_timer) > 1000) {
+      unregister_code(KC_LALT);
+      is_alt_tab_active = false;
+    }
+  }
+}
 enum preonic_keycodes {
   QWERTY = SAFE_RANGE,
   LOWER,
@@ -110,7 +140,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 };
-
+/*
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
         case QWERTY:
@@ -159,7 +189,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
     return true;
 };
-
+*/
 bool muse_mode = false;
 uint8_t last_muse_note = 0;
 uint16_t muse_counter = 0;
@@ -200,7 +230,7 @@ void dip_switch_update_user(uint8_t index, bool active) {
     }
 }
 
-
+/*
 void matrix_scan_user(void) {
 #ifdef AUDIO_ENABLE
     if (muse_mode) {
@@ -221,7 +251,7 @@ void matrix_scan_user(void) {
     }
 #endif
 }
-
+*/
 bool music_mask_user(uint16_t keycode) {
   switch (keycode) {
     case RAISE:
@@ -232,33 +262,3 @@ bool music_mask_user(uint16_t keycode) {
   }
 }
 
-enum custom_keycodes {             //# Make sure have the awesome keycode ready
-  ALT_TAB = SAFE_RANGE,
-};
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {               //# This will do most of the grunt work with the keycodes.
-    case ALT_TAB:
-      if (record->event.pressed) {
-        if (!is_alt_tab_active) {
-          is_alt_tab_active = true;
-          register_code(KC_LALT);
-        }
-        alt_tab_timer = timer_read();
-        register_code(KC_TAB);
-      } else {
-        unregister_code(KC_TAB);
-      }
-      break;
-  }
-  return true;
-}
-
-void matrix_scan_user(void) {     //# The very important timer.
-  if (is_alt_tab_active) {
-    if (timer_elapsed(alt_tab_timer) > 1000) {
-      unregister_code(KC_LALT);
-      is_alt_tab_active = false;
-    }
-  }
-}
