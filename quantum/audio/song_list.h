@@ -152,54 +152,6 @@
  *   proof of permission to use them, or public domain status.
  */
 
-<<<<<<< HEAD
-#define CLOSE_ENCOUNTERS_5_NOTE
-#define DOE_A_DEER
-#define IN_LIKE_FLINT
-#define IMPERIAL_MARCH\
-  W__NOTE(_G4), W__NOTE(_G4), W__NOTE(_G4), WD_NOTE(_EF4), H__NOTE(_BF4), \
-  W__NOTE(_G4), WD_NOTE(_EF4),  H__NOTE(_BF4), B__NOTE(_G4), \
-  W__NOTE(_D5), W__NOTE(_D5), W__NOTE(_D5), WD_NOTE(_EF5), H__NOTE(_BF5), \
-  W__NOTE(_FS4), WD_NOTE(_EF4),  H__NOTE(_BF5), B__NOTE(_G4)
-#define BASKET_CASE
-#define COIN_SOUND
-#define ONE_UP_SOUND
-#define SONIC_RING
-#define ZELDA_PUZZLE
-#define ZELDA_TREASURE
-#define OVERWATCH_THEME
-#define MARIO_THEME\
-    E__NOTE(_C5),Q__NOTE(_C5),E__NOTE(_C5),E__NOTE(_A4),Q__NOTE(_C5),Q__NOTE(_B5),Q__NOTE(_G4)
-#define MARIO_GAMEOVER
-#define MARIO_MUSHROOM
-#define E1M1_DOOM
-#define DISNEY_SONG
-#define NUMBER_ONE
-#define CABBAGE_SONG
-#define OLD_SPICE
-#define VICTORY_FANFARE_SHORT
-#define ALL_STAR
-#define RICK_ROLL
-#define FF_PRELUDE
-#define TO_BOLDLY_GO
-#define KATAWARE_DOKI
-#define MEGALOVANIA
-#define MICHISHIRUBE
-#define LIEBESLEID
-#define MELODIES_OF_LIFE
-#define EYES_ON_ME
-#define SONG_OF_THE_ANCIENTS
-#define NIER_AMUSEMENT_PARK
-#define COPIED_CITY
-#define VAGUE_HOPE_COLD_RAIN
-#define KAINE_SALVATION
-#define WEIGHT_OF_THE_WORLD
-#define ISABELLAS_LULLABY
-#define TERRAS_THEME
-#define RENAI_CIRCULATION
-#define PLATINUM_DISCO
-#define LP_NUMB
-=======
 #ifndef CLOSE_ENCOUNTERS_5_NOTE
 #    define CLOSE_ENCOUNTERS_5_NOTE
 #endif
@@ -323,4 +275,3 @@
 #ifndef LP_NUMB
 #    define LP_NUMB
 #endif
->>>>>>> upstream/master
