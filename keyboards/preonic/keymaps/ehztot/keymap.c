@@ -24,6 +24,39 @@ enum preonic_layers {
   _ADJUST
 };
 
+bool is_alt_tab_active = false;   // # ADD this near the begining of keymap.c
+uint16_t alt_tab_timer = 0;       // # we will be using them soon.
+
+enum custom_keycodes {             //# Make sure have the awesome keycode ready
+  ALT_TAB = SAFE_RANGE,
+};
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {               //# This will do most of the grunt work with the keycodes.
+    case ALT_TAB:
+      if (record->event.pressed) {
+        if (!is_alt_tab_active) {
+          is_alt_tab_active = true;
+          register_code(KC_LALT);
+        }
+        alt_tab_timer = timer_read();
+        register_code(KC_TAB);
+      } else {
+        unregister_code(KC_TAB);
+      }
+      break;
+  }
+  return true;
+}
+
+void matrix_scan_user(void) {     //# The very important timer.
+  if (is_alt_tab_active) {
+    if (timer_elapsed(alt_tab_timer) > 1000) {
+      unregister_code(KC_LALT);
+      is_alt_tab_active = false;
+    }
+  }
+}
 enum preonic_keycodes {
   QWERTY = SAFE_RANGE,
   LOWER,
@@ -39,29 +72,29 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * | Tab  |   Q  |   W  |   E  |   R  |   T  |   Y  |   U  |   I  |   O  |   P  | mins |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * | ctrl |   A  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   ;  |Enter |
+ * | ctrl |   A  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   ;  |  '   |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  | '    |
+ * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  | Enter|    
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * | LOWER| ESC  | GUI  | ALT  |    SPACE    |  del        | Left | Down |  Up  |Right |
  * `-----------------------------------------------------------------------------------'
  */
-[_QWERTY] = LAYOUT_preonic_2x2u(KC_GRV, KC_1, KC_2, KC_3, KC_4, KC_5,KC_6,KC_7,KC_8,KC_9,KC_0,KC_BSPC, KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_MINS, KC_LCTL, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT,KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_ENT, KC_ESC, KC_ESC, KC_LGUI, KC_LALT, KC_SPC, LT(1,KC_DEL),KC_LEFT, KC_DOWN, KC_UP, KC_RGHT),
+[_QWERTY] = LAYOUT_preonic_2x2u(KC_GRV, KC_1, KC_2, KC_3, KC_4, KC_5,KC_6,KC_7,KC_8,KC_9,KC_0,KC_BSPC, KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_MINS, KC_LCTL, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT,KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH,MT(MOD_LSFT, KC_ENT), KC_ESC, KC_ESC, KC_LGUI, KC_LALT, KC_SPC, LT(1,KC_DEL),KC_LEFT, KC_DOWN, KC_UP, KC_RGHT),
 
 /* Lower
  * ,-----------------------------------------------------------------------------------.
  * |  esc |  f1  |  f2  |  f3  |  f4  |  f5  |  f6  |  f7  |  f8  |  f9  |  =   |  \   |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * |      |  f11 |  f12 |      |      |      |   7  |   8  |   9  |   [  |   ]  | Del  |
+ * |      |  f11 |  f12 |      |   *  |  +   |   7  |   8  |   9  |   [  |   ]  | Del  |
  * |------+--- --+------+------+------+-------------+------+------+------+------+------|
- * |      |      |      |      |      |      |   4  |   5  |   6  |  ins |  home|  pu  |
- * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |shift | bu   |      |      |      |      |   1  |   2  |   3  | del  | end  |  pd  |
+ * |      |      |      |      |   /  |  -   |   4  |   5  |   6  |  ins |  home|  pu  |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      | bd   |      |      |      |             |      | Next | Vol- | Vol+ | Play |
+ * |shift | bu   |      |      |      |  0   |   1  |   2  |   3  | del  | end  |  pd  |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      | bd   |      |      |             |             | Next | Vol- | Vol+ | Play |
  * `-----------------------------------------------------------------------------------'
  */
-[_LOWER] = LAYOUT_preonic_2x2u(KC_ESC, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_EQL, KC_PSCR, KC_TAB, KC_F11, KC_F12, KC_NO, KC_NO, KC_NO, KC_P7, KC_P8, KC_P9, KC_LBRC, KC_RBRC, KC_BSLS, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_P4, KC_P5, KC_P6, KC_INS, KC_HOME, KC_PGUP, KC_LSFT, KC_BRIU, KC_NO, KC_NO, KC_NO, KC_NO, KC_P1, KC_P2, KC_P3, KC_DEL, KC_END, KC_PGDN, KC_LGUI, KC_BRID, KC_NO, KC_TRNS, KC_MPLY, TO(1), KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT),
+[_LOWER] = LAYOUT_preonic_2x2u(KC_ESC, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_EQL, KC_PSCR, KC_TAB, KC_F11, KC_F12, KC_NO, KC_PAST, KC_PPLS, KC_P7, KC_P8, KC_P9, KC_LBRC, KC_RBRC, KC_BSLS, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_PSLS, KC_PMNS, KC_P4, KC_P5, KC_P6, KC_INS, KC_HOME, KC_PGUP, KC_LSFT, KC_BRIU, KC_NO, KC_NO, KC_NO, KC_P0, KC_P1, KC_P2, KC_P3, KC_DEL, KC_END, KC_PGDN, ALT_TAB, KC_BRID, KC_NO, KC_TRNS, KC_MPLY, TO(1), KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT),
 
 /* Raise
  * ,-----------------------------------------------------------------------------------.
@@ -107,7 +140,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 };
-
+/*
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
         case QWERTY:
@@ -156,7 +189,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
     return true;
 };
-
+*/
 bool muse_mode = false;
 uint8_t last_muse_note = 0;
 uint16_t muse_counter = 0;
@@ -164,26 +197,18 @@ uint8_t muse_offset = 70;
 uint16_t muse_tempo = 50;
 
 void encoder_update_user(uint8_t index, bool clockwise) {
-  if (muse_mode) {
-    if (IS_LAYER_ON(_LOWER)) {
-      if (clockwise) {
-        muse_offset++;
-      } else {
-        muse_offset--;
-      }
-    } else {
-      if (clockwise) {
-        muse_tempo+=1;
-      } else {
-        muse_tempo-=1;
-      }
-    }
-  } else {
-    if (clockwise) {
-      tap_code(KC_MS_WH_UP);
-    } else {
-      tap_code(KC_MS_WH_DOWN);
-    }
+    if (IS_LAYER_ON(_RAISE)) {
+        if (clockwise) {
+            tap_code(KC_RIGHT);
+        }else {
+            tap_code(KC_LEFT);
+                }
+    }else {
+        if (clockwise) {
+            tap_code(KC_MS_WH_UP);
+        } else {
+            tap_code(KC_MS_WH_DOWN);
+                }
   }
 }
 
@@ -205,7 +230,7 @@ void dip_switch_update_user(uint8_t index, bool active) {
     }
 }
 
-
+/*
 void matrix_scan_user(void) {
 #ifdef AUDIO_ENABLE
     if (muse_mode) {
@@ -226,7 +251,7 @@ void matrix_scan_user(void) {
     }
 #endif
 }
-
+*/
 bool music_mask_user(uint16_t keycode) {
   switch (keycode) {
     case RAISE:
@@ -236,3 +261,4 @@ bool music_mask_user(uint16_t keycode) {
       return true;
   }
 }
+
